@@ -43,64 +43,62 @@ describe('Messenger', function(){
     messenger.start().then(done)
   })
 
-  describe('queue', function(){
-    describe('ResponseQueue', function(){
-      let responseQueue;
+  describe('ResponseQueue', function(){
+    let responseQueue;
 
-      before(function(done){
-        responseQueue = messenger.responseQueue();
-        responseQueue.start()
-          .then( () => done() )
-          .catch(done)
-      })
-
-      it('create a response queue', function(){
-        expect(responseQueue.queue).to.be.a('string')
-      })
-
-      it('shoud call onResponse callback', function(done){
-        responseQueue.onResponse( (payload) => {
-          expect(payload).to.be.a('object')
-          expect(payload).to.eql({bar: 'foo'})
-          done();
-        })
-
-        messenger.send({bar: 'foo'}, responseQueue.queue)
-        expect(responseQueue.queue).to.be.a('string')
-      })
-
+    before(function(done){
+      responseQueue = messenger.responseQueue();
+      responseQueue.start()
+        .then( () => done() )
+        .catch(done)
     })
 
-    describe('EventQueue', function(){
-      let eventQueue;
+    it('create a response queue', function(){
+      expect(responseQueue.queue).to.be.a('string')
+    })
 
+    it('shoud call onResponse callback', function(done){
+      responseQueue.onResponse( (payload) => {
+        expect(payload).to.be.a('object')
+        expect(payload).to.eql({bar: 'foo'})
+        done();
+      })
+
+      messenger.send({bar: 'foo'}, responseQueue.queue)
+      expect(responseQueue.queue).to.be.a('string')
+    })
+
+  })
+
+  describe('EventQueue', function(){
+    let eventQueue;
+
+    before(function(done){
+      eventQueue = messenger.eventQueue();
+      eventQueue.start()
+        .then( () => done() )
+        .catch(done)
+    })
+
+    it('create an event queue', function(){
+      expect(eventQueue.queue).to.be.a('string')
+    })
+
+    describe('broadcasting', function(){
       before(function(done){
-        eventQueue = messenger.eventQueue();
-        eventQueue.start()
-          .then( () => done() )
-          .catch(done)
+        eventQueue.subscribe('my_test_event')
+        .then( () => done() )
+        .catch(done)
       })
 
-      it('create an event queue', function(){
-        expect(eventQueue.queue).to.be.a('string')
-      })
-
-      describe('broadcasting', function(){
-        before(function(done){
-          eventQueue.subscribe('my_test_event')
-          .then( () => done() )
-          .catch(done)
-        })
-
-        it('should receive a broadcasted event', function(done){
-          eventQueue.onEvent((message) => {
-            expect(message).to.be.a('object')
-            expect(message.content).to.eql({foo: 'bar'})
-            expect(message.key).to.equal('my_test_event')
-            done();
-          });
-          messenger.broadcast({foo: 'bar'}, 'my_test_event')
-        })
+      it('should receive a broadcasted event', function(done){
+        eventQueue.onEvent((message) => {
+          expect(message).to.be.a('object')
+          expect(message.content).to.eql({foo: 'bar'})
+          expect(message.key).to.equal('my_test_event')
+          done();
+        });
+        messenger.broadcast({foo: 'bar'}, 'my_test_event')
       })
     })
   })
