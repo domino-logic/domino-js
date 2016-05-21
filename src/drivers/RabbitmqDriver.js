@@ -1,32 +1,36 @@
-import amqp from 'amqplib'
-import objectAssign from 'object-assign'
+'use strict';
+
+import amqp from 'amqplib';
+import objectAssign from 'object-assign';
 
 
 const defaultConfig = {
-  messengerURL: 'amqp://localhost'
-  broadcastQueue: 'domino_change'
-}
+  messengerURL: 'amqp://localhost',
+  broadcastQueue: 'domino_broadcast'
+};
 
 
 /** Messaging Queue Driver for RabbitMQ */
 class RabbitmqDriver {
   /**
-   * Initialize the driver with its options
-   * @param {object} options - The application options
+   * Initialize the driver with its config
+   * @param {object} config - The application config
    */
-  constructor (options) {
-    this.options = objectAssign(defaultConfig, options)
+  constructor (config) {
+    this.config = objectAssign({}, defaultConfig, config);
   }
 
 
   /**
    * Connects the driver to its service with the provided
-   * options.
+   * config.
+   * @return {promise}
    */
   start () {
-    amqp.connect(this.messengerURL)
+    return amqp.connect(this.messengerURL)
     .then( conn => conn.createChannel() )
     .then( channel => this.channel = channel )
+    .then( () => this.createBroadcastQueue() )
   }
 
   /**
@@ -36,7 +40,7 @@ class RabbitmqDriver {
    */
   createBroadcastQueue () {
     return this.channel.assertExchange(
-      this.options.broadcastQueue,
+      this.config.broadcastQueue,
       'topic',
       {durable: false}
     )
@@ -63,11 +67,11 @@ class RabbitmqDriver {
    * @param {string} queue - the destination queue for the message
    * @return {promise} the send promise
    */
-  send (message, queue, options) {
+  send (message, queue, config) {
     return this.channel.sendToQueue(
       queue,
       new Buffer(JSON.stringify(message)),
-      options
+      config
     )
   }
 
@@ -86,23 +90,51 @@ class RabbitmqDriver {
   /**
    * Creates a named queue
    * @param {string} queue - The name of the queue
-   * @param {object} options - (optional) additional creation options
+   * @param {object} config - (optional) additional creation config
    * @return {promise} the created messaging queue name
    */
-  createQueue (queue, options) {
-    return this.channel.assertQueue(queue, options)
+  createQueue (queue, config) {
+    return this.channel.assertQueue(queue, config)
     .then( assertedQueue => assertedQueue.queue )
   }
 
   /**
    * Creates a randomly named private queue
-   * @param {object} options - (optional) additional creation options
+   * @param {object} config - (optional) additional creation config
    * @return {promise} the created messaging queue name
    */
-  createPrivateQueue (options) {
+  createPrivateQueue (config) {
     return this.createQueue(
       '',
-      objectAssign({exclusive: true}, options)
+      objectAssign({exclusive: true}, config)
+    )
+  }
+
+  /**
+   * Subscribe a queue to a given broadcasted topic
+   * @param {string} queue - The subscribed queue
+   * @param {string} topic - The topic subscribed to
+   * @return {promise}
+   */
+  subscribe (queue, topic) {
+    return this.channel.bindQueue(
+      queue,
+      this.config.broadcastQueue,
+      topic
+    )
+  }
+
+  /**
+   * Unsubscribe a queue from a given broadcasted topic
+   * @param {string} queue - The subscribed queue
+   * @param {string} topic - The topic subscribed to
+   * @return {promise}
+   */
+  unsubscribe (topic) {
+    return this.channel.unbindQueue(
+      queue,
+      this.config.broadcastQueue,
+      topic
     )
   }
 
@@ -119,11 +151,11 @@ class RabbitmqDriver {
    * @param {string} queue - The queue to listen to
    * @param {function} callback - The callback triggered on queue event
    */
-  listen (queue, callback) {
-    return this.channel.consume(queue, callback);
+  listen (queue, callback, options) {
+    return this.channel.consume(queue, callback, options);
   }
 
 }
 
 
-module.exports = RabbitMQDriver
+module.exports = RabbitMQDriver;
