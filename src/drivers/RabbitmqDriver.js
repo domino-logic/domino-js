@@ -30,7 +30,7 @@ class RabbitmqDriver {
     return amqp.connect(this.messengerURL)
     .then( conn => conn.createChannel() )
     .then( channel => this.channel = channel )
-    .then( () => this.createBroadcastQueue() )
+    .then( this.createBroadcastQueue.bind(this) )
   }
 
   /**
@@ -44,7 +44,7 @@ class RabbitmqDriver {
       'topic',
       {durable: false}
     )
-    .then( assertedExchange => assertedExchange.queue )
+    .then( assertedExchange => return assertedExchange.queue )
   }
 
   /**
@@ -130,7 +130,7 @@ class RabbitmqDriver {
    * @param {string} topic - The topic subscribed to
    * @return {promise}
    */
-  unsubscribe (topic) {
+  unsubscribe (queue, topic) {
     return this.channel.unbindQueue(
       queue,
       this.config.broadcastQueue,

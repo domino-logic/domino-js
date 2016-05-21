@@ -4,8 +4,8 @@
 /** Handle RPC messaging response */
 class ResponseQueue {
   /**
-   * Initialize the messenger with its config
-   * @param {object} config - The application config
+   * Initialize the Response queue
+   * @param {object} driver - a messaging queue driver instance
    */
   constructor (driver) {
     this.driver = driver;
