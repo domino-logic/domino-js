@@ -1,0 +1,27 @@
+{
+  "name": "domino-js",
+  "version": "0.0.0",
+  "description": "NodeJS implementation of Domino pattern",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/domino-logic/domino-js.git"
+  },
+  "keywords": [
+    "asynchronous",
+    "reactive",
+    "pattern",
+    "nodejs",
+    "actor",
+    "watcher"
+  ],
+  "author": "Brice LEROY <bbrriiccee@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/domino-logic/domino-js/issues"
+  },
+  "homepage": "https://github.com/domino-logic/domino-js#readme"
+}
