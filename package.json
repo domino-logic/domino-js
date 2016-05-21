@@ -4,7 +4,7 @@
   "description": "NodeJS implementation of Domino pattern",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "nodejs test"
   },
   "repository": {
     "type": "git",
