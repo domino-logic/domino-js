@@ -1,4 +1,4 @@
-import {RabbitmqDriver} from '../lib/domino'
+import {RabbitmqDriver} from '../src/domino'
 import {expect} from 'chai'
 
 

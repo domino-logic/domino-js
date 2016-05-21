@@ -15,8 +15,8 @@ class EventQueue {
   }
 
   /**
-   * Initialize the response queue
-   * @param {string} queue - The name of the response queue (usually random)
+   * Initialize the event queue
+   * @param {string} queue - The name of the event queue (usually random)
    * @return {Promise}
    */
   init(queue) {
@@ -30,7 +30,7 @@ class EventQueue {
 
   /**
    * Trigger all the registered callback with the event message
-   * @param {object} message - the response message
+   * @param {object} message - the event message
    */
   trigger (msg){
     this.callbacks.forEach( (callback) => {
@@ -53,7 +53,7 @@ class EventQueue {
 
   /**
    * Register a callback for this event queue
-   * @param {function} callback - The function to call on response
+   * @param {function} callback - The function to call on event
    * @return {function} a deregistration function
    */
   onEvent(callback) {
