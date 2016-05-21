@@ -44,7 +44,7 @@ class RabbitmqDriver {
       'topic',
       {durable: false}
     )
-    .then( assertedExchange => return assertedExchange.queue )
+    .then( assertedExchange => assertedExchange.queue )
   }
 
   /**
@@ -158,4 +158,4 @@ class RabbitmqDriver {
 }
 
 
-module.exports = RabbitMQDriver;
+export default RabbitmqDriver;

@@ -2,9 +2,11 @@
   "name": "domino-js",
   "version": "0.0.0",
   "description": "NodeJS implementation of Domino pattern",
-  "main": "index.js",
+  "main": "lib/domino.js",
   "scripts": {
-    "test": "nodejs test"
+    "test": "npm run compile && mocha --compilers js:babel-core/register",
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -23,9 +25,21 @@
   "bugs": {
     "url": "https://github.com/domino-logic/domino-js/issues"
   },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
   "homepage": "https://github.com/domino-logic/domino-js#readme",
   "dependencies": {
     "amqplib": "^0.4.1",
+    "babel-polyfill": "^6.9.0",
     "object-assign": "^4.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0",
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
   }
 }

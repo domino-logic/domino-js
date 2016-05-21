@@ -51,4 +51,4 @@ class ResponseQueue {
 }
 
 
-module.exports = ResponseQueue;
+export default ResponseQueue;

@@ -97,4 +97,4 @@ class Messenger {
 }
 
 
-module.exports = Messenger;
+export default Messenger;
