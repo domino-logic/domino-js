@@ -10,7 +10,6 @@ class EventQueue {
   constructor (driver) {
     this.driver = driver;
     this.callbacks = [];
-    this.keys = [];
   }
 
   start() {
@@ -22,9 +21,9 @@ class EventQueue {
    * Initialize the event queue
    * @param {string} queue - The name of the event queue (usually random)
    */
-  init(queue) {
+  init (queue) {
     this.queue = queue;
-    this.keys.forEach(this._subscribe.bind(this));
+
     return this.driver.listen(
       this.queue,
       this.trigger.bind(this)
@@ -45,21 +44,11 @@ class EventQueue {
   }
 
   /**
-   * Private subscribe to a given topic to allow subscribing
-   * to a topic while queue has yet to be created.
-   * @param {string} key - The topic key to subscribe to
-   * @return {promise}
-   */
-  _subscribe (key) {
-    return this.driver.subscribe(this.queue, key);
-  }
-
-  /**
    * Register a callback for this event queue
    * @param {function} callback - The function to call on event
    * @return {function} a deregistration function
    */
-  onEvent(callback) {
+  onEvent (callback) {
     this.callbacks.push(callback);
     return () => {
       this.callbacks.slice(this.callbacks.indexOf(callback), 1);
@@ -71,23 +60,15 @@ class EventQueue {
    * @param {string} key - The topic key to subscribe to
    */
   subscribe (key) {
-    if(this.queue){
-      this._subscribe(key);
-    } else {
-      this.keys.push(key);
-    }
+    return this.driver.subscribe(this.queue, key);
   }
 
   /**
    * Unsubscribe from a given topic.
    * @param {string} key - The topic key to unsubscribe from
    */
-  unsubscribe(key) {
-    if(this.queue){
-      this.driver.unsubscribe(this.queue, key);
-    } else {
-      this.keys.slice(this.keys.indexOf(key), 1);
-    }
+  unsubscribe (key) {
+    return this.driver.unsubscribe(this.queue, key);
   }
 }
 

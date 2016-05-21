@@ -54,8 +54,8 @@ class RabbitmqDriver {
    * @return {promise} the broadcast promise
    */
   broadcast (message, topic) {
-    return this.channel.publish(
-      this.broadcastQueue,
+    this.channel.publish(
+      this.config.broadcastQueue,
       topic,
       new Buffer(JSON.stringify(message))
     )

@@ -34,6 +34,7 @@ describe('Messenger config', function() {
   });
 });
 
+
 describe('Messenger', function(){
   let messenger;
 
@@ -56,6 +57,18 @@ describe('Messenger', function(){
       it('create a response queue', function(){
         expect(responseQueue.queue).to.be.a('string')
       })
+
+      it('shoud call onResponse callback', function(done){
+        responseQueue.onResponse( (payload) => {
+          expect(payload).to.be.a('object')
+          expect(payload).to.eql({bar: 'foo'})
+          done();
+        })
+
+        messenger.send({bar: 'foo'}, responseQueue.queue)
+        expect(responseQueue.queue).to.be.a('string')
+      })
+
     })
 
     describe('EventQueue', function(){
@@ -70,6 +83,24 @@ describe('Messenger', function(){
 
       it('create an event queue', function(){
         expect(eventQueue.queue).to.be.a('string')
+      })
+
+      describe('broadcasting', function(){
+        before(function(done){
+          eventQueue.subscribe('my_test_event')
+          .then( () => done() )
+          .catch(done)
+        })
+
+        it('should receive a broadcasted event', function(done){
+          eventQueue.onEvent((message) => {
+            expect(message).to.be.a('object')
+            expect(message.content).to.eql({foo: 'bar'})
+            expect(message.key).to.equal('my_test_event')
+            done();
+          });
+          messenger.broadcast({foo: 'bar'}, 'my_test_event')
+        })
       })
     })
   })

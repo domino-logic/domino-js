@@ -22,12 +22,13 @@ class ResponseQueue {
    * @param {string} queue - The name of the response queue (usually random)
    * @return {Promise}
    */
-  init(queue) {
-    this.queue = queue
+  init (queue) {
+    this.queue = queue;
+
     return this.driver.listen(
       this.queue,
       this.trigger.bind(this)
-    )
+    );
   }
 
   /**
@@ -36,8 +37,9 @@ class ResponseQueue {
    */
   trigger (message){
     const content = JSON.parse(message.content);
-    this.callbacks.forEach( (callback) => callback(content) )
-    this.driver.ack(message)
+
+    this.callbacks.forEach( (callback) => callback(content) );
+    this.driver.ack(message);
   }
 
   /**
@@ -45,8 +47,8 @@ class ResponseQueue {
    * @param {function} callback - The function to call on response
    * @return {function} a deregistration function
    */
-  onResponse(callback) {
-    this.callbacks.push(callback)
+  onResponse (callback) {
+    this.callbacks.push(callback);
     return () => {
       this.callbacks.slice(this.callbacks.indexOf(callback), 1)
     }

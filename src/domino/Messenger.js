@@ -50,7 +50,7 @@ class Messenger {
    * Broadcast a message to a given topic
    * @param {object} message - A JSON message to be broadcasted
    * @param {string} topic - the topic of the message
-   * @return {promise} the broadcast promise
+   * @return nothing
    */
   broadcast (topic, message) {
     this.driver.broadcast(topic, message);
@@ -78,8 +78,8 @@ class Messenger {
    * @param {string} queue - the destination queue for the message
    * @return {promise} the send promise
    */
-  send (queue, message) {
-    return this.send(queue, message);
+  send (message, queue) {
+    return this.driver.send(message, queue);
   }
 
   /**
