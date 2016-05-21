@@ -10,14 +10,17 @@ class EventQueue {
   constructor (driver) {
     this.driver = driver;
     this.callbacks = [];
-    this.driver.createPrivateQueue()
+    this.keys = [];
+  }
+
+  start() {
+    return this.driver.createPrivateQueue()
     .then(this.init.bind(this))
   }
 
   /**
    * Initialize the event queue
    * @param {string} queue - The name of the event queue (usually random)
-   * @return {Promise}
    */
   init(queue) {
     this.queue = queue;

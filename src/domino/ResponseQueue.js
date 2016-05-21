@@ -10,7 +10,10 @@ class ResponseQueue {
   constructor (driver) {
     this.driver = driver;
     this.callbacks = [];
-    this.driver.createPrivateQueue()
+  }
+
+  start () {
+    return this.driver.createPrivateQueue()
     .then(this.init.bind(this))
   }
 

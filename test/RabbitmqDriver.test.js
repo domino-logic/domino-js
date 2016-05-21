@@ -31,11 +31,11 @@ describe('RabbitmqDriver', function(){
       config = rabbitmqDriver.config;
     })
 
-    it('should default URL to the custom URL', function(){
+    it('should register the custom URL', function(){
       expect(config.messengerURL).to.equal('my URL');
     })
 
-    it('should default broadcast to custom queue', function(){
+    it('should register the custom queue', function(){
       expect(config.broadcastQueue).to.equal('my broadcast queue');
     })
   })

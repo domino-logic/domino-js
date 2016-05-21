@@ -143,7 +143,7 @@ class RabbitmqDriver {
    * @param {object} message - The message to acknoledge
    */
   ack (message) {
-    this.channel.ack(message);
+    return this.channel.ack(message);
   }
 
   /**
