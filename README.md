@@ -10,7 +10,7 @@ with the front facing web service.
 
 ### Action
 
-Action sends a message to an actore. The action returns a promise.
+Action sends a message to an actor. The action returns a promise.
 
 Action accepts a third optional callback argument. This argument is being
 triggered when the actor sends back a response.notify
