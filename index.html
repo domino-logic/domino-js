@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Domino-js by domino-logic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Domino-js</h1>
+      <h2 class="project-tagline">NodeJS implementation of Domino pattern</h2>
+      <a href="https://github.com/domino-logic/domino-js" class="btn">View on GitHub</a>
+      <a href="https://github.com/domino-logic/domino-js/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/domino-logic/domino-js/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="dominojs" class="anchor" href="#dominojs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>DominoJS</h1>
+
+<p>This describes the global pattern of Domino.</p>
+
+<h2>
+<a id="domino-client-service" class="anchor" href="#domino-client-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Domino Client Service</h2>
+
+<p>The client service is the library to be embeded in your front end,
+web-browser loaded application. It simplifies the communication
+with the front facing web service.</p>
+
+<h3>
+<a id="action" class="anchor" href="#action" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Action</h3>
+
+<p>Action sends a message to an actor. The action returns a promise.</p>
+
+<p>Action accepts a third optional callback argument. This argument is being
+triggered when the actor sends back a response.notify</p>
+
+<h4>
+<a id="action-callback-signature" class="anchor" href="#action-callback-signature" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Action Callback Signature</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">myAction</span>(<span class="pl-smi">message</span>, <span class="pl-smi">response</span>, <span class="pl-smi">dispatch</span>) {
+  <span class="pl-c">// ...</span>
+}</pre></div>
+
+<h4>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Action creating Foo</span>
+<span class="pl-k">function</span> <span class="pl-en">createFoo</span> (<span class="pl-smi">foo</span>){
+  <span class="pl-smi">domino</span>.<span class="pl-c1">action</span>(<span class="pl-s"><span class="pl-pds">'</span>foo.create<span class="pl-pds">'</span></span>, foo, progress)
+  .<span class="pl-en">then</span>((<span class="pl-smi">payload</span>) <span class="pl-k">=&gt;</span> <span class="pl-smi">toaster</span>.<span class="pl-en">success</span>(<span class="pl-s"><span class="pl-pds">'</span>Foo has been created<span class="pl-pds">'</span></span>))
+  .<span class="pl-en">catch</span>((<span class="pl-smi">err</span>) <span class="pl-k">=&gt;</span> <span class="pl-en">console</span>.<span class="pl-c1">error</span>(err))
+}
+
+<span class="pl-k">function</span> <span class="pl-en">progress</span>(<span class="pl-smi">payload</span>){
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>some progress...<span class="pl-pds">'</span></span>, payload)
+}
+</pre></div>
+
+<h3>
+<a id="subscription" class="anchor" href="#subscription" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Subscription</h3>
+
+<p>Front end can subscribe to broadcasted messages. wildcard can be used
+to replace one word. Subscription also accepts interpolation using context
+variables.</p>
+
+<p>Changing context variable will automatically unsubscribe from the previous
+channels and subscribe to the new ones.</p>
+
+<h4>
+<a id="example-1" class="anchor" href="#example-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> <span class="pl-smi">FooActions</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>./FooActions<span class="pl-pds">'</span></span>
+<span class="pl-k">import</span> <span class="pl-smi">domino</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>../domino<span class="pl-pds">'</span></span>
+
+
+<span class="pl-k">function</span> <span class="pl-en">fooEventHandler</span>(<span class="pl-smi">payload</span>, <span class="pl-smi">type</span>){
+  <span class="pl-k">switch</span>(type){
+    <span class="pl-k">case</span> <span class="pl-s"><span class="pl-pds">'</span>foo.adCreated<span class="pl-pds">'</span></span><span class="pl-k">:</span>
+      <span class="pl-smi">FooActions</span>.<span class="pl-en">adCreated</span>(payload)
+      <span class="pl-k">break</span>;
+    <span class="pl-k">case</span> <span class="pl-s"><span class="pl-pds">'</span>foo.adUpdated<span class="pl-pds">'</span></span><span class="pl-k">:</span>
+      <span class="pl-smi">FooActions</span>.<span class="pl-en">adUpdated</span>(payload)
+      <span class="pl-k">break</span>;
+  }
+}
+
+<span class="pl-smi">domino</span>.<span class="pl-en">register</span>(<span class="pl-s"><span class="pl-pds">'</span>foo.*<span class="pl-pds">'</span></span>, fooEventHandler);
+
+<span class="pl-c">// using string interpolation</span>
+<span class="pl-smi">domino</span>.<span class="pl-en">register</span>(<span class="pl-s"><span class="pl-pds">'</span>[account_id].*<span class="pl-pds">'</span></span>, accountEventHandler);
+<span class="pl-smi">domino</span>.<span class="pl-en">setContext</span>({account_id<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>123<span class="pl-pds">'</span></span>})</pre></div>
+
+<h3>
+<a id="connection-loss" class="anchor" href="#connection-loss" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Connection loss</h3>
+
+<p>In case of connection loss, the registration should re-establish
+subscription upon reconnection.</p>
+
+<h2>
+<a id="domino-front-service" class="anchor" href="#domino-front-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Domino Front Service</h2>
+
+<p>This is the front facing service, exposing socket.io and rest
+API endpoints.</p>
+
+<h3>
+<a id="rest-endpoint" class="anchor" href="#rest-endpoint" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rest Endpoint</h3>
+
+<p>REST point are being constructed based on desconstruction of the
+action.</p>
+
+<p>.ie <code>'foo.bar'</code> would become available at <code>/foo/bar/</code> as a POST request.</p>
+
+<h3>
+<a id="socket" class="anchor" href="#socket" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Socket</h3>
+
+<p>Socket allows frontend to receive pushed data from the watchers when
+they broadcast information on a given channel.</p>
+
+<h3>
+<a id="middleware" class="anchor" href="#middleware" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Middleware</h3>
+
+<p>Global middleware can be defined</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">fooMiddleware</span>(<span class="pl-smi">message</span>, <span class="pl-smi">request</span>){
+  <span class="pl-k">const</span> <span class="pl-c1">augmentedMessage</span> <span class="pl-k">=</span> <span class="pl-c1">Object</span>.<span class="pl-en">assign</span>({}, message, {foo<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>bar<span class="pl-pds">'</span></span>})
+  <span class="pl-smi">request</span>.<span class="pl-en">resolve</span>(augmentedMessage);
+}
+
+<span class="pl-smi">domino</span>.<span class="pl-en">use</span>(fooMiddleware)</pre></div>
+
+<p>Sub-domain middleware:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">middleware</span>(<span class="pl-smi">message</span>, <span class="pl-smi">request</span>){
+  <span class="pl-k">if</span>(<span class="pl-smi">message</span>.<span class="pl-smi">foo</span>){
+    <span class="pl-smi">request</span>.<span class="pl-en">resolve</span>(message);
+  } <span class="pl-k">else</span> {
+    <span class="pl-smi">request</span>.<span class="pl-en">reject</span>(message)
+  }
+}
+
+<span class="pl-smi">domino</span>.<span class="pl-en">domain</span>(<span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>)
+  .<span class="pl-en">use</span>(middleware)
+  .<span class="pl-en">actor</span>(<span class="pl-k">...</span>)</pre></div>
+
+<h2>
+<a id="domino-back-service" class="anchor" href="#domino-back-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Domino Back Service</h2>
+
+<p>This handles actors and watchers. Worker can also be created
+here. While possible to instanciate a dispatcher, is is not
+recommended to dispatch information from a worker but instead
+to call other publicly available actors with a payload when requiring
+to dispatch an information.</p>
+
+<h3>
+<a id="actors" class="anchor" href="#actors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Actors</h3>
+
+<p>Actors are the recipients of actions. They can respond to a request
+using their response object. They announce mutation through their
+dispatch object. The dispatch is scoped to their domain only to enforce
+a more predictive behavior.</p>
+
+<ul>
+<li>an actor belongs to a domain and has a name</li>
+</ul>
+
+<h4>
+<a id="example-2" class="anchor" href="#example-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Actor definition</span>
+<span class="pl-k">function</span> <span class="pl-en">createBar</span>(<span class="pl-smi">message</span>, <span class="pl-smi">response</span>, <span class="pl-smi">dispatch</span>) {
+  <span class="pl-smi">myForm</span>.<span class="pl-c1">submit</span>(<span class="pl-smi">message</span>.<span class="pl-c1">content</span>.<span class="pl-smi">payload</span>)
+    .<span class="pl-en">then</span>(<span class="pl-k">function</span>(<span class="pl-smi">record</span>){
+      <span class="pl-smi">response</span>.<span class="pl-en">ok</span>({message<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Creation successful<span class="pl-pds">'</span></span>})
+      <span class="pl-c">// will dispatch bar.created (bar being the domain)</span>
+      <span class="pl-en">dispatch</span>(<span class="pl-s"><span class="pl-pds">'</span>created<span class="pl-pds">'</span></span>, record)
+    })
+    .<span class="pl-en">catch</span>(<span class="pl-k">function</span>(<span class="pl-smi">err</span>){
+      <span class="pl-smi">response</span>.<span class="pl-en">error</span>(err)
+    })
+}
+
+<span class="pl-c">// Register the actor on the bar domain, it will be</span>
+<span class="pl-c">// triggered by the 'bar.createFoo' action.</span>
+<span class="pl-smi">domino</span>.<span class="pl-en">domain</span>(<span class="pl-s"><span class="pl-pds">'</span>bar<span class="pl-pds">'</span></span>)
+  .<span class="pl-en">actor</span>(<span class="pl-s"><span class="pl-pds">'</span>create<span class="pl-pds">'</span></span>, createBar)</pre></div>
+
+<h3>
+<a id="watchers" class="anchor" href="#watchers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Watchers</h3>
+
+<p>Watchers receive dispatched data by the actors:</p>
+
+<ul>
+<li>a watcher belongs to a domain and has a name</li>
+<li>a watcher listens to one or more channels dispatch</li>
+</ul>
+
+<h4>
+<a id="example-3" class="anchor" href="#example-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Watcher definition</span>
+<span class="pl-k">function</span> <span class="pl-en">barCreateWatcher</span>(<span class="pl-smi">message</span>, <span class="pl-smi">broadcast</span>) {
+  <span class="pl-c">// will broadcast on 'foo.created' (foo being the domain)</span>
+  <span class="pl-en">broadcast</span>(<span class="pl-s"><span class="pl-pds">'</span>created<span class="pl-pds">'</span></span>, <span class="pl-smi">message</span>.<span class="pl-c1">content</span>.<span class="pl-smi">payload</span>)
+}
+
+<span class="pl-c">// Register the watcher. It will be called when 'bar.created'</span>
+<span class="pl-c">// message is being dispacthed by an actor.</span>
+<span class="pl-smi">domino</span>.<span class="pl-en">domain</span>(<span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>)
+  .<span class="pl-en">watcher</span>(<span class="pl-s"><span class="pl-pds">'</span>barCreateWatcher<span class="pl-pds">'</span></span>, barCreateWatcher, [<span class="pl-s"><span class="pl-pds">'</span>bar.created<span class="pl-pds">'</span></span>])</pre></div>
+
+<h2>
+<a id="domino-messenger-service" class="anchor" href="#domino-messenger-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Domino Messenger Service</h2>
+
+<p>Act as a wrapper around a given messenging queue service. RabbitMQ will
+be the first to be integrated here.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/domino-logic/domino-js">Domino-js</a> is maintained by <a href="https://github.com/domino-logic">domino-logic</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
