@@ -5,6 +5,7 @@
   "main": "lib/domino.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register",
+    "coverage": "istanbul cover _mocha -- --compilers js:babel-core/register",
     "compile": "babel -d lib/ src/",
     "docs": "./node_modules/.bin/jsdoc -r -d ./docs ./src",
     "prepublish": "npm run compile"
@@ -43,6 +44,7 @@
     "babel-cli": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
+    "istanbul": "1.0.0-alpha.2",
     "jsdoc": "^3.4.0",
     "mocha": "^2.4.5"
   }

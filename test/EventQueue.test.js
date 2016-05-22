@@ -31,12 +31,14 @@ describe('EventQueue', function(){
     })
 
     it('should receive a broadcasted event', function(done){
-      eventQueue.onEvent((message) => {
+      const unregister = eventQueue.onEvent((message) => {
         expect(message).to.be.a('object')
         expect(message.content).to.eql({foo: 'bar'})
         expect(message.key).to.equal('my_test_event')
+        unregister();
         done();
       });
+
       messenger.broadcast({foo: 'bar'}, 'my_test_event')
     })
   })
