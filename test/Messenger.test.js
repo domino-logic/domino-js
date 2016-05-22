@@ -84,6 +84,7 @@ describe('Messenger', function(){
       it('should respond to request', function(done){
         requestQueue.request({a: 'b'}, queue)
         .then( (payload) => {
+          expect(payload).to.eql({a: 'b'});
           done();
         })
       })

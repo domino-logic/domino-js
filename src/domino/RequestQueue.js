@@ -51,7 +51,7 @@ class RequestQueue {
     const deferred = this.registry[message.properties.correlationId];
 
     if(deferred) {
-      deferred.resolve(message);
+      deferred.resolve(content);
       delete this.registry[message.properties.correlationId];
     }
 
