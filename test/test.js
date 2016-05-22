@@ -1,2 +1,5 @@
 import './RabbitmqDriver.test'
 import './Messenger.test'
+import './RequestQueue.test'
+import './ResponseQueue.test'
+import './EventQueue.test'
