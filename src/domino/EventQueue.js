@@ -34,11 +34,11 @@ class EventQueue {
    * Trigger all the registered callback with the event message
    * @param {object} message - the event message
    */
-  trigger (msg){
+  trigger (message){
     this.callbacks.forEach( (callback) => {
       callback({
-        key: msg.fields.routingKey,
-        content: JSON.parse(msg.content)
+        key: message.fields.routingKey,
+        content: JSON.parse(message.content)
       });
     })
   }

@@ -35,7 +35,9 @@
   "dependencies": {
     "amqplib": "^0.4.1",
     "babel-polyfill": "^6.9.0",
-    "object-assign": "^4.1.0"
+    "node-uuid": "^1.4.7",
+    "object-assign": "^4.1.0",
+    "when": "^3.7.7"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",

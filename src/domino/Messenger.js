@@ -4,6 +4,7 @@ import objectAssign from 'object-assign';
 import RabbitmqDriver from './drivers/RabbitmqDriver';
 import EventQueue from './EventQueue';
 import ResponseQueue from './ResponseQueue';
+import RequestQueue from './RequestQueue';
 
 
 const defaultConfig = {
@@ -25,7 +26,7 @@ class Messenger {
    * initialize the driver
    * @return {promise}
    */
-  start (callback) {
+  start () {
     return this.driver.start();
   }
 
@@ -33,17 +34,18 @@ class Messenger {
    * Acknoledge the reception of a message
    * @param {object} message - The message to acknoledge
    */
-  ack (msg) {
-    this.driver.ack(msg);
+  ack (message) {
+    this.driver.ack(message);
   }
 
   /**
    * Listens to a queue
    * @param {string} queue - The queue to listen to
    * @param {function} callback - The callback triggered on queue event
+   * @return {Promise}
    */
   listen (queue, callback) {
-    this.driver.listen(queue, callback);
+    return this.driver.listen(queue, callback);
   }
 
   /**
@@ -57,11 +59,19 @@ class Messenger {
   }
 
   /**
-   * Creates a new eventQueue handler
+   * Creates a new responseQueue handler
    * @return {ResponseQueue} a responseQueue handler
    */
   responseQueue () {
     return new ResponseQueue(this.driver);
+  }
+
+  /**
+   * Creates a new requestQueue handler
+   * @return {RequestQueue} a requestQueue handler
+   */
+  requestQueue () {
+    return new RequestQueue(this.driver);
   }
 
   /**
@@ -81,19 +91,6 @@ class Messenger {
   send (message, queue) {
     return this.driver.send(message, queue);
   }
-
-  /**
-   * Send a message to a given queue and expects a response
-   * @param {object} message - a JSON message to be broadcasted
-   * @param {string} queue - the destination queue for the message
-   * @param {string} replyTo - the queue to send the response to
-   * @param {string} correlationId - A unique identifier for this request
-   * @return {promise} the request promise
-   */
-  request (message, queue, replyTo, correlationId) {
-    return this.request(message, queue, {replyTo, correlationId});
-  }
-
 }
 
 

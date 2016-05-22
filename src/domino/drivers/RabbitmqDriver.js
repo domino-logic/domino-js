@@ -65,13 +65,14 @@ class RabbitmqDriver {
    * Send a message to a given queue
    * @param {object} message - A JSON message to be broadcasted
    * @param {string} queue - the destination queue for the message
+   * @param {object} options - sending options
    * @return {promise} the send promise
    */
-  send (message, queue, config) {
+  send (message, queue, options) {
     return this.channel.sendToQueue(
       queue,
       new Buffer(JSON.stringify(message)),
-      config
+      options
     )
   }
 
