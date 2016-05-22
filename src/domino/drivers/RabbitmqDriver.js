@@ -77,18 +77,6 @@ class RabbitmqDriver {
   }
 
   /**
-   * Send a message to a given queue and expects a response
-   * @param {object} message - a JSON message to be broadcasted
-   * @param {string} queue - the destination queue for the message
-   * @param {string} replyTo - the queue to send the response to
-   * @param {string} correlationId - A unique identifier for this request
-   * @return {promise} the request promise
-   */
-  request (message, queue, replyTo, correlationId) {
-    return this.send(message, queue, {replyTo, correlationId})
-  }
-
-  /**
    * Creates a named queue
    * @param {string} queue - The name of the queue
    * @param {object} config - (optional) additional creation config

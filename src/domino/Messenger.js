@@ -31,14 +31,6 @@ class Messenger {
   }
 
   /**
-   * Acknoledge the reception of a message
-   * @param {object} message - The message to acknoledge
-   */
-  ack (message) {
-    this.driver.ack(message);
-  }
-
-  /**
    * Listens to a queue
    * @param {string} queue - The queue to listen to
    * @param {function} callback - The callback triggered on queue event
